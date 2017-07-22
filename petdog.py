@@ -20,18 +20,18 @@ while(1):
     # Convert BGR to HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # define range of blue color in HSV
-    lower_blue = np.array([30, 255, 135], dtype=np.uint8)
-    upper_blue = np.array([40, 255, 185], dtype=np.uint8)
+    # Define range of yellow color in HSV for tennis ball
+    lower_yellow = np.array([30, 255, 135], dtype=np.uint8)
+    upper_yellow = np.array([40, 255, 185], dtype=np.uint8)
 
-    # Threshold the HSV image to get only blue colors
-    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+    # Threshold the HSV image to get only yellow colors
+    mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
 
     moments = cv2.moments(mask)
     area = moments['m00']
 
     if(area > 100000): 
-        #determine the x and y coordinates of the center of the object 
+        #Determine the x and y coordinates of the center of the object 
         #we are tracking by dividing the 1, 0 and 0, 1 moments by the area 
         x = moments['m10'] / area
         y = moments['m01'] / area
@@ -40,12 +40,6 @@ while(1):
         frame = cv2.circle(frame,(int(x), int(y)), 2, (255, 255, 255), 20)
         move_pet(x,y,area)
 
-    # Bitwise-AND mask and original image
-    #res = cv2.bitwise_and(frame,frame, mask= mask)
-
-    #cv2.imshow('frame',frame)
-    
-    #cv2.imshow('mask',mask)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         clean_up()
         break
